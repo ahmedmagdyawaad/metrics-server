@@ -8,6 +8,8 @@ spec:
   containers:
   - name: nginx
     image: nginx
-    imagePullPolicy: IfNotPresent
+    command: ["printenv"]
+    args: ["HOSTNAME", "KUBERNETES_PORT"]
+  restartPolicy: OnFailure
   nodeSelector:
     disktype: ssd
