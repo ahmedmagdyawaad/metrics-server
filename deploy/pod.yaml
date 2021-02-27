@@ -8,8 +8,36 @@ spec:
   containers:
   - name: nginx
     image: nginx
+#CPU and MEMory Resources
+    resources:
+      limits:
+        cpu: "1"
+      requests:
+        cpu: "0.5"
+#Commands/Args
     command: ["printenv"]
     args: ["HOSTNAME", "KUBERNETES_PORT"]
+#Environement_ConfigMap
+    envFrom:
+      - configMapRef:
+          name: special-config
   restartPolicy: OnFailure
   nodeSelector:
     disktype: ssd
+#InitContainers
+  initContainers:
+  - name: install
+    image: busybox
+    command:
+    - wget
+    - "-O"
+#nodeffinity
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/e2e-az-name
+            operator: In
+            values:
+            - e2e-az1
